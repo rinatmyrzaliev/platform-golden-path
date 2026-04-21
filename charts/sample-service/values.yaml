@@ -2,6 +2,7 @@
 name: sample-service
 team: platform-eng
 slo_tier: 3
+on_call_channel: "platform-eng-oncall"
 
 image:
   repository: nginx

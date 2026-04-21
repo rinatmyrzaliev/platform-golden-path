@@ -10,6 +10,7 @@ metadata:
     app.kubernetes.io/part-of: platform
     platform.io/team: {{ required "A value for .Values.team is required" .Values.team | quote }}
     platform.io/slo-tier: {{ required "A value for .Values.slo_tier is required" .Values.slo_tier | quote }}
+    platform.io/on-call: {{ required "A value for .Values.on_call_channel is required" .Values.on_call_channel | quote}}
 spec:
   replicas: {{ .Values.replicaCount | default 2 }}
   selector:
@@ -24,7 +25,23 @@ spec:
         app.kubernetes.io/part-of: platform
         platform.io/team: {{ .Values.team | quote }}
         platform.io/slo-tier: {{ .Values.slo_tier | quote }}
+        platform.io/on-call: {{ required "A value for .Values.on_call_channel is required" .Values.on_call_channel | quote}}
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ .Values.name | quote }}
+              app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ .Values.name | quote }}
+              app.kubernetes.io/instance: {{ .Release.Name | quote }}
       containers:
         - name: {{ .Values.name | quote }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

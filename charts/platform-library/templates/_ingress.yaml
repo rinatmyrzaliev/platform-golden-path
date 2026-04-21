@@ -11,6 +11,7 @@ metadata:
     app.kubernetes.io/part-of: platform
     platform.io/team: {{ .Values.team | quote }}
     platform.io/slo-tier: {{ .Values.slo_tier | quote }}
+    platform.io/on-call: {{ required "A value for .Values.on_call_channel is required" .Values.on_call_channel | quote}}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

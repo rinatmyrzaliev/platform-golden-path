@@ -1,0 +1,26 @@
+{{- define "platform.pdb" }}
+{{- if ne (toString (.Values.pdb).enabled) "false" }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.name | quote }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.name | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/part-of: platform
+    platform.io/team: {{ .Values.team | quote }}
+    platform.io/slo-tier: {{ .Values.slo_tier | quote }}
+    platform.io/on-call: {{ .Values.on_call_channel | quote }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.name | quote }}
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  {{- if and (.Values.pdb) (.Values.pdb).maxUnavailable}}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable }}
+  {{- else }}
+  maxUnavailable: 1
+  {{- end }}
+{{- end }}
+{{- end -}}

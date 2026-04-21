@@ -1,6 +1,7 @@
 name: catalog-service
 team: platform-eng
 slo_tier: "2"
+on_call_channel: "platform-eng-oncall"
 
 image:
   repository: nginxinc/nginx-unprivileged
