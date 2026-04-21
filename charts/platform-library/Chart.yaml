@@ -1,0 +1,5 @@
+apiVersion: v2
+name: platform-library
+description: Shared Helm templates for microservices on our platform. Library chart - not installable on its own.
+type: library
+version: 0.1.0

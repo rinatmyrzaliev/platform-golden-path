@@ -1,0 +1,12 @@
+# Required fields
+name: sample-service
+team: platform-eng
+slo_tier: 3
+
+image:
+  repository: nginx
+  tag: "1.27"
+
+port: 80
+
+# Optional — will pick up library defaults when omitted
