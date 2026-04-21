@@ -1,0 +1,23 @@
+{{- define "platform.service" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.name | quote }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.name | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/part-of: platform
+    platform.io/team: {{ .Values.team | quote }}
+    platform.io/slo-tier: {{ .Values.slo_tier | quote }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  selector:
+    app.kubernetes.io/name: {{ .Values.name | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port | default .Values.port }}
+      targetPort: http
+      protocol: TCP
+{{- end -}}

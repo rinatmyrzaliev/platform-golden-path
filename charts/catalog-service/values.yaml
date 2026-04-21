@@ -1,19 +1,14 @@
-# Required fields
-name: sample-service
+name: catalog-service
 team: platform-eng
-slo_tier: 3
+slo_tier: "2"
 
 image:
-  repository: nginx
+  repository: nginxinc/nginx-unprivileged
   tag: "1.27"
 
-port: 80
+port: 8080
 
-env:
-  - name: LOG_LEVEL
-    value: "info"
-  - name: APP_VERSION
-    value: "1.0.0"
+replicaCount: 2
 
 resources:
   requests:
@@ -35,5 +30,3 @@ service:
 
 ingress:
   enabled: false
-
-# Optional — will pick up library defaults when omitted

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: catalog-service
+description: Read-heavy, public-facing catalog service
+version: 0.1.0
+type: application
+dependencies:
+  - name: platform-library
+    version: "0.2.0"
+    repository: "file://../platform-library"

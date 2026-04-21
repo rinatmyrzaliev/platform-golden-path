@@ -57,4 +57,10 @@ spec:
               port: http
             initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds | default 15 }}
             periodSeconds: {{ .Values.probes.liveness.periodSeconds | default 20 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
 {{- end -}}
