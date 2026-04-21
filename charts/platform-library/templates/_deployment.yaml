@@ -54,6 +54,13 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.secrets }}
+          envFrom:
+            {{- range .Values.secrets }}
+            - secretRef:
+                name: {{ $.Values.name }}-{{ .name }}
+            {{- end }}
+          {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

@@ -1,0 +1,38 @@
+name: orders-service
+team: platform-eng
+slo_tier: "2"
+on_call_channel: platform-eng-oncall
+
+image:
+  repository: nginxinc/nginx-unprivileged
+  tag: "1.27"
+
+port: 8080
+replicaCount: 2
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+securityContext: {}
+
+probes:
+  readiness: {}
+  liveness: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+
+secrets:
+  - name: db-password
+    remoteKey: platform/orders/db-password
+  - name: api-key
+    remoteKey: platform/orders/api-key
