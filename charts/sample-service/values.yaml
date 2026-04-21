@@ -9,4 +9,24 @@ image:
 
 port: 80
 
+env:
+  - name: LOG_LEVEL
+    value: "info"
+  - name: APP_VERSION
+    value: "1.0.0"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+securityContext: {}
+
+probes:
+  readiness: {}
+  liveness: {}
+
 # Optional — will pick up library defaults when omitted
