@@ -19,7 +19,7 @@ spec:
       source:
         repoURL: https://github.com/rinatmyrzaliev/platform-golden-path.git
         targetRevision: main
-        path: "{{ . path }}"
+        path: "{{ .path.path }}"
         helm:
           releaseName: "{{ .path.basename }}"
       destination:
@@ -31,4 +31,3 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-          
