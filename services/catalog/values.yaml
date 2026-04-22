@@ -30,4 +30,5 @@ service:
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
+  host: catalog.lab.local

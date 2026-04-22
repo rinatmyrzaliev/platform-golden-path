@@ -29,7 +29,8 @@ service:
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
+  host: orders.lab.local
 
 secrets:
   - name: db-password
