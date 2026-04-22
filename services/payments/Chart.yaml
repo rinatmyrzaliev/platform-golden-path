@@ -4,5 +4,5 @@ version: 0.1.0
 type: application
 dependencies:
   - name: platform-library
-    version: "0.4.0"
+    version: "1.0.0"
     repository: "file://../../charts/platform-library"
