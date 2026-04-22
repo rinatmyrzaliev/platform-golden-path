@@ -1,0 +1,32 @@
+name: reports-service
+team: analytics
+slo_tier: "3"
+on_call_channel: analytics-oncall
+
+image:
+  repository: nginxinc/nginx-unprivileged
+  tag: "1.27"
+
+port: 8080
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+securityContext: {}
+
+probes:
+  readiness: {}
+  liveness: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
