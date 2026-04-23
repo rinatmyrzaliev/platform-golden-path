@@ -9,7 +9,7 @@ image:
 
 port: 8080
 
-replicaCount: 0
+replicaCount: 2
 
 resources:
   requests:
