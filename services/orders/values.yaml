@@ -41,7 +41,7 @@ secrets:
 rollout:
   enabled: true
   workloadRef:
-    enabled: true
+    enabled: false
   strategy:
     canary:
       steps:
