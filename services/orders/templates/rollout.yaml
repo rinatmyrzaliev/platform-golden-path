@@ -1,0 +1,3 @@
+{{- if .Values.rollout.enabled }}
+{{ include "platform.rollout" . }}
+{{- end }}
