@@ -2,4 +2,14 @@ apiVersion: v2
 name: platform-library
 description: Shared Helm templates for microservices on our platform. Library chart - not installable on its own.
 type: library
-version: 1.0.0
+version: 1.1.0
+
+# Changelog:
+# 1.1.0 - Added opt-in Rollout template (Argo Rollouts). Supports both
+#         inline pod spec (greenfield) and workloadRef takeover (migration
+#         from existing Deployment). Refactored pod spec into shared
+#         _podspec partial to avoid duplication between Deployment and
+#         Rollout templates.
+#         Backward compatible: consumers on v1.0.0 behavior continue
+#         working unchanged (rollout.enabled defaults to false).
+# 1.0.0 - Initial stable release.

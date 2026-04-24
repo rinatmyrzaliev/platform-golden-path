@@ -1,6 +1,6 @@
-{{- define "platform.deployment" -}}
-apiVersion: apps/v1
-kind: Deployment
+{{- define "platform.rollout" -}}
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ .Values.name | quote }}
   labels:
@@ -10,13 +10,24 @@ metadata:
     app.kubernetes.io/part-of: platform
     platform.io/team: {{ required "A value for .Values.team is required" .Values.team | quote }}
     platform.io/slo-tier: {{ required "A value for .Values.slo_tier is required" .Values.slo_tier | quote }}
-    platform.io/on-call: {{ required "A value for .Values.on_call_channel is required" .Values.on_call_channel | quote}}
+    platform.io/on-call: {{ required "A value for .Values.on_call_channel is required" .Values.on_call_channel | quote }}
 spec:
   replicas: {{ .Values.replicaCount | default 2 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ .Values.name | quote }}
       app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  {{- if .Values.rollout.workloadRef.enabled }}
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.name | quote }}
+  {{- else }}
   template:
     {{- include "platform.podspec" . | nindent 4 }}
+  {{- end }}
+  strategy:
+    canary:
+      steps:
+        {{- toYaml .Values.rollout.strategy.canary.steps | nindent 8 }}
 {{- end -}}

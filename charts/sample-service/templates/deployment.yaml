@@ -1,1 +1,5 @@
+{{- $rolloutEnabled := and .Values.rollout .Values.rollout.enabled }}
+{{- $workloadRefEnabled := and .Values.rollout .Values.rollout.workloadRef .Values.rollout.workloadRef.enabled }}
+{{- if or (not $rolloutEnabled) $workloadRefEnabled }}
 {{- include "platform.deployment" . -}}
+{{- end }}

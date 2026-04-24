@@ -1,2 +1,19 @@
-# This library chart has no values of its own.
-# Consumer charts provide values; library templates consume them.
+# platform-library defaults.
+# Consumers inherit these and override as needed.
+#
+# Most values (name, image, team, slo_tier, on_call_channel, etc.) are NOT
+# defaulted here — they're either required-at-render-time or consumer-specific.
+# This file only provides defaults for opt-in features with sensible platform-wide policies.
+
+rollout:
+  enabled: false
+  workloadRef:
+    enabled: false
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: {}
+        - setWeight: 50
+        - pause: { duration: 2m }
+        - setWeight: 100

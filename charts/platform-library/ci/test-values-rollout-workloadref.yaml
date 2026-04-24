@@ -1,0 +1,22 @@
+name: test-svc
+team: platform
+slo_tier: tier1
+on_call_channel: "#platform-oncall"
+replicaCount: 2
+port: 8080
+image:
+  repository: nginx
+  tag: "1.27"
+probes:
+  readiness: {}
+  liveness: {}
+securityContext: {}
+rollout:
+  enabled: true
+  workloadRef:
+    enabled: true      # Mode B — takeover
+  strategy:
+    canary:
+      steps:
+        - setWeight: 10
+        - pause: {}

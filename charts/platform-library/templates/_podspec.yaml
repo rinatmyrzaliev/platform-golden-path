@@ -1,0 +1,71 @@
+{{- define "platform.podspec" -}}
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Values.name | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/part-of: platform
+    platform.io/team: {{ .Values.team | quote }}
+    platform.io/slo-tier: {{ .Values.slo_tier | quote }}
+    platform.io/on-call: {{ required "A value for .Values.on_call_channel is required" .Values.on_call_channel | quote }}
+spec:
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: {{ .Values.name | quote }}
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: {{ .Values.name | quote }}
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  containers:
+    - name: {{ .Values.name | quote }}
+      image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+      ports:
+        - name: http
+          containerPort: {{ .Values.port }}
+          protocol: TCP
+      {{- with .Values.env }}
+      env:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.secrets }}
+      envFrom:
+        {{- range .Values.secrets }}
+        - secretRef:
+            name: {{ $.Values.name }}-{{ .name }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: {{ .Values.securityContext.runAsNonRoot | default true }}
+        readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem | default true }}
+        allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation | default false }}
+      readinessProbe:
+        httpGet:
+          path: {{ .Values.probes.readiness.path | default "/" }}
+          port: http
+        initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds | default 5 }}
+        periodSeconds: {{ .Values.probes.readiness.periodSeconds | default 10 }}
+      livenessProbe:
+        httpGet:
+          path: {{ .Values.probes.liveness.path | default "/" }}
+          port: http
+        initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds | default 15 }}
+        periodSeconds: {{ .Values.probes.liveness.periodSeconds | default 20 }}
+      volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+  volumes:
+    - name: tmp
+      emptyDir: {}
+{{- end -}}
