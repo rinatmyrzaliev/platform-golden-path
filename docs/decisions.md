@@ -249,3 +249,59 @@ on the platform team.
   "draft" folder without it being deployed (could add an ignore pattern).
 - Namespace name equals folder name — naming convention is enforced by
   directory structure.
+
+  ---
+
+## ADR-010: Opt-in Rollout template in platform-library v1.1.0
+
+### Date
+2026-04-23
+
+### Status
+Accepted
+
+### Context
+We want to offer progressive delivery (canary rollouts) alongside the existing Deployment pattern in the platform library. A Deployment's rolling update can't check real user-facing metrics before promoting — it only checks readiness probes. We want promotions gated on SLIs from Project 2 (latency, availability, 5xx rate) so a bad version is caught at small blast radius instead of full fleet.
+
+Argo Rollouts provides this: a canary version takes a small weight of traffic (e.g., 20%), pauses, gets promoted step by step until it reaches 100% only if metrics stay healthy.
+
+We make this change in the library chart because it should be the platform-wide standard. Adding Rollouts service-by-service outside the library would duplicate work and drift over time.
+
+### Decision
+- Added an opt-in Rollout template to the library, gated by `rollout.enabled` (default `false`). Existing consumers on v1.0.0 behavior are unaffected.
+- Two modes supported:
+  - **Mode A (inline):** Rollout owns its pod spec directly. For greenfield services starting on Rollouts.
+  - **Mode B (`workloadRef` takeover):** Rollout points at an existing Deployment and adopts its ReplicaSets for zero-downtime migration. Temporary state — flipped off after migration completes.
+- **Library owns the shape** of a Rollout (structure, labels, pod spec via shared `_podspec.yaml` partial). **Consumer chart owns the choice** of whether to render a Rollout (branching lives in `services/*/templates/rollout.yaml` and `deployment.yaml`, not inside the library).
+- Versioned as **v1.1.0 (minor bump)** because the change is purely additive — no existing consumer needs to change code or values to upgrade.
+
+### Alternatives considered
+
+**1. Replace Deployment template with Rollout (major bump, v2.0.0)**
+
+Rejected. Making Rollout the default would force every existing consumer to start rendering a new resource type without asking. That's a breaking change under semver — it would require a v2.0.0 major bump and a coordinated migration across all services. Opt-in avoids the forced migration entirely.
+
+**2. Library-side branching (single partial picks Deployment or Rollout internally)**
+
+Rejected. Branching belongs in the consumer chart, not hidden inside the library. When a service developer reads their own `templates/` directory, they should see what their chart produces. Library-side branching forces them to read library internals to know whether they're shipping a Deployment or a Rollout — that's bad for both onboarding and debugging.
+
+**3. Skip the `_podspec` refactor, duplicate pod spec in both templates**
+
+Rejected. Two inline copies of the same pod spec would drift over time — someone adds an env var to Deployment but forgets Rollout, or updates probes in Rollout but not Deployment. Extracting the shared pod spec into `_podspec.yaml` makes drift impossible by construction: there is only one source of truth for the pod spec, and both templates include it.
+
+### Consequences
+
+**Positive:**
+- Service teams can adopt Rollouts incrementally, one service at a time, by flipping a single values flag.
+- Library upgrade from v1.0.0 → v1.1.0 requires zero changes from existing consumers.
+- Pod spec lives in exactly one place (`_podspec.yaml`), shared by both Deployment and Rollout templates — drift-proof by construction.
+- Platform team ships opinionated canary defaults (20 → manual gate → 50 → 2m pause → 100) in library `values.yaml`. Teams that want different behavior override explicitly, making the choice visible in Git.
+
+**Negative / trade-offs:**
+- Two templates to maintain (`_deployment.yaml` and `_rollout.yaml`). Future pod-spec features (init containers, sidecars, etc.) touch the shared partial — but outer-spec features may need to be added to both.
+- Opt-in adoption is not automatic. Services that never set `rollout.enabled: true` stay on Deployments indefinitely. The platform gets the capability, but organization-wide adoption requires team buy-in.
+- `workloadRef` is a migration state, not a permanent one. A service left with `workloadRef.enabled: true` after migration completes will render both a Deployment and a Rollout in the cluster — the stale Deployment wastes resources and creates confusion. Requires discipline, documentation, or automated linting to catch.
+
+### Related decisions
+- ADR-001 (library vs umbrella chart)
+- ADR-004 (required fields enforcement)
