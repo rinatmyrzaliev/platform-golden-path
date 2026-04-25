@@ -5,7 +5,7 @@ on_call_channel: platform-eng-oncall
 
 image:
   repository: nginxinc/nginx-unprivileged
-  tag: "1.28"
+  tag: "1.27"
 
 port: 8080
 replicaCount: 2
