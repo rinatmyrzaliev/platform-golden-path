@@ -28,6 +28,13 @@ spec:
   {{- end }}
   strategy:
     canary:
+      {{- if and .Values.ingress .Values.ingress.enabled }}
+      stableService: {{ .Values.name | quote }}
+      canaryService: "{{ .Values.name }}-canary"
+      trafficRouting:
+        nginx:
+          stableIngress: {{ .Values.name | quote }}
+      {{- end}}
       steps:
         {{- toYaml .Values.rollout.strategy.canary.steps | nindent 8 }}
 {{- end -}}

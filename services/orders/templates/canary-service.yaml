@@ -1,0 +1,3 @@
+{{- if and .Values.rollout .Values.rollout.enabled }}
+{{ include "platform.canary-service" . }}
+{{- end }}
