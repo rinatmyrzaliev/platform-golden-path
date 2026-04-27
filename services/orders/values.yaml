@@ -21,10 +21,8 @@ resources:
 securityContext: {}
 
 probes:
-  readiness:
-    path: /healthz
-  liveness:
-    path: /healthz
+  readiness: {}
+  liveness: {}
 
 service:
   type: ClusterIP
