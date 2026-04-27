@@ -37,4 +37,14 @@ spec:
       {{- end}}
       steps:
         {{- toYaml .Values.rollout.strategy.canary.steps | nindent 8 }}
+      {{- if and .Values.rollout.analysis .Values.rollout.analysis.templates }}
+      analysis:
+        templates:
+          {{- range .Values.rollout.analysis.templates }}
+          - templateName: {{ .templateName }}
+            clusterScope: {{ .clusterScope | default false }}
+          {{- end }}
+        args:
+          {{- toYaml .Values.rollout.analysis.args | nindent 10 }}
+      {{- end }}
 {{- end -}}

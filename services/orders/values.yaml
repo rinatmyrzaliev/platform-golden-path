@@ -50,3 +50,13 @@ rollout:
         - setWeight: 50
         - pause: {duration: 30s}
         - setWeight: 100
+  analysis:
+    templates:
+      - templateName: success-rate
+        clusterScope: true
+      - templateName: latency-p99
+        clusterScope: true
+    args:
+      - name: namespace
+        value: orders
+
