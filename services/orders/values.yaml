@@ -5,7 +5,7 @@ on_call_channel: platform-eng-oncall
 
 image:
   repository: nginxinc/nginx-unprivileged
-  tag: "1.28"
+  tag: "1.27"
 
 port: 8080
 replicaCount: 2
@@ -46,9 +46,9 @@ rollout:
     canary:
       steps:
         - setWeight: 20
-        - pause: {}
+        - pause: {duration: 60s}
         - setWeight: 50
-        - pause: {duration: 30s}
+        - pause: {duration: 60s}
         - setWeight: 100
   analysis:
     templates:
