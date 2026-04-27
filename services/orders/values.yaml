@@ -4,8 +4,8 @@ slo_tier: "2"
 on_call_channel: platform-eng-oncall
 
 image:
-  repository: nginxinc/nginx-unprivileged
-  tag: "1.27"
+  repository: 517121893325.dkr.ecr.us-east-1.amazonaws.com/orders-service
+  tag: "broken-503"
 
 port: 8080
 replicaCount: 2
