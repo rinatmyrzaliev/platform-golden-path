@@ -13,6 +13,7 @@ metadata:
     platform.io/on-call: {{ required "A value for .Values.on_call_channel is required" .Values.on_call_channel | quote }}
 spec:
   replicas: {{ .Values.replicaCount | default 2 }}
+  progressDeadlineSeconds: {{ .Values.rollout.progressDeadlineSeconds | default 120 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ .Values.name | quote }}
