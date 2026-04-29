@@ -1,0 +1,5 @@
+{{- include "platform.deployment" . }}
+---
+{{- include "platform.service" . }}
+---
+{{- include "platform.pdb" . }}

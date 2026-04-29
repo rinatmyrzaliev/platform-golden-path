@@ -1,0 +1,37 @@
+name: alert-copilot
+team: platform-eng
+slo_tier: "3"
+on_call_channel: platform-eng-oncall
+
+image:
+  repository: 517121893325.dkr.ecr.us-east-1.amazonaws.com/alert-copilot
+  tag: "latest"
+
+port: 8080
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+securityContext: {}
+
+probes:
+  readiness:
+    path: /healthz
+  liveness:
+    path: /healthz
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+
+rollout:
+  enabled: false

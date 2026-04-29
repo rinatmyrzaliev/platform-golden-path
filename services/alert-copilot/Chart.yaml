@@ -1,0 +1,8 @@
+apiVersion: v2
+name: alert-copilot
+version: 0.1.0
+type: application
+dependencies:
+  - name: platform-library
+    version: "1.4.0"
+    repository: "file://../../charts/platform-library"
