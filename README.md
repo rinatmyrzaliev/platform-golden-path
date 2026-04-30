@@ -7,7 +7,7 @@ New service onboarding is a single Git commit. ArgoCD ApplicationSets detect the
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────┐
 │                     Git Repository                       │
 │                                                          │
 │  charts/platform-library/       Library chart (v1.0.0)   │
@@ -24,20 +24,20 @@ New service onboarding is a single Git commit. ArgoCD ApplicationSets detect the
 │    reports/  ──┘                                         │
 │                                                          │
 │  apps/applicationset.yaml       Git generator            │
-└────────────────────┬────────────────────────────────────┘
+└────────────────────┬─────────────────────────────────────┘
                      │ ArgoCD watches main branch
                      ▼
 ┌─────────────────────────────────────────────────────────┐
-│                    EKS Cluster                           │
-│                                                          │
-│  ArgoCD ApplicationSet                                   │
-│    ├── catalog   (Synced + Healthy)                      │
-│    ├── orders    (Synced + Healthy)                      │
-│    ├── payments  (Synced + Healthy)                      │
-│    └── reports   (Synced + Healthy)                      │
-│                                                          │
-│  External Secrets Operator                               │
-│    └── ClusterSecretStore → AWS Secrets Manager           │
+│                    EKS Cluster                          │
+│                                                         │
+│  ArgoCD ApplicationSet                                  │
+│    ├── catalog   (Synced + Healthy)                     │
+│    ├── orders    (Synced + Healthy)                     │
+│    ├── payments  (Synced + Healthy)                     │
+│    └── reports   (Synced + Healthy)                     │
+│                                                         │
+│  External Secrets Operator                              │
+│    └── ClusterSecretStore → AWS Secrets Manager         │
 └─────────────────────────────────────────────────────────┘
 ```
 
