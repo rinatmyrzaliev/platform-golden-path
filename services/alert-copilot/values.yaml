@@ -35,3 +35,7 @@ ingress:
 
 rollout:
   enabled: false
+
+secrets:
+  - name: claude-api-key
+    remoteKey: platform/alert-copilot/claude-api-key
