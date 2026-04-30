@@ -5,7 +5,7 @@ on_call_channel: platform-eng-oncall
 
 image:
   repository: 517121893325.dkr.ecr.us-east-1.amazonaws.com/alert-copilot
-  tag: "2c9f5ad4290a6a1def7486fae7784da5c08506e1"
+  tag: "ab243312c96fd1c3a78155a378dcfb2dc3056415"
 
 port: 8080
 replicaCount: 1
