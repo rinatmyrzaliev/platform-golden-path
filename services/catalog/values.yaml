@@ -32,3 +32,6 @@ service:
 ingress:
   enabled: true
   host: catalog.lab.local
+
+rollout:
+  enabled: false

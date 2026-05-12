@@ -1,7 +1,7 @@
 {{- include "platform.deployment" . }}
 ---
-{{- include "platform.service" . }}
+{{ include "platform.service" . }}
 ---
-{{- include "platform.pdb" . }}
+{{ include "platform.pdb" . }}
 ---
-{{- include "platform.externalsecret" . }}
+{{ include "platform.externalsecret" . }}

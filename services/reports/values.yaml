@@ -30,3 +30,6 @@ service:
 
 ingress:
   enabled: false
+
+rollout:
+  enabled: false
