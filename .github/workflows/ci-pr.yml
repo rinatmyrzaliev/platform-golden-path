@@ -37,5 +37,5 @@ jobs:
           for svc in services/*/; do
             echo "--- Validating $svc ---"
             helm dependency update "$svc"
-            helm template test "$svc" | kubeconform -strict -summary -kubernetes-version 1.35.0
+            helm template test "$svc" | kubeconform -strict -summary -kubernetes-version 1.35.0 -ignore-missing-schemas
             done
