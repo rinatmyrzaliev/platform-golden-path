@@ -26,3 +26,16 @@ jobs:
             helm dependency update "$svc"
             helm lint "$svc"
           done
+
+          - name: Install kubeconform
+          run: |
+            curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz | tar xz
+            sudo mv kubeconform /usr/local/bin/
+  
+      - name: Template and validate services
+        run: |
+          for svc in services/*/; do
+            echo "--- Validating $svc ---"
+            helm dependency update "$svc"
+            helm template test "$svc" | kubeconform -strict -summary -kubernetes-version 1.35.0
+            done
