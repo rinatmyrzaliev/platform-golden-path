@@ -1,0 +1,49 @@
+name: notifications-service
+team: platform-eng
+slo_tier: "2"
+on_call_channel: platform-eng-oncall
+image:
+  repository: 517121893325.dkr.ecr.us-east-1.amazonaws.com/notifications-service
+  tag: "39704f3d5c5290d1e6b717e553c15201787392a3"
+port: 8000
+replicaCount: 2
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+securityContext: {}
+probes:
+  readiness:
+    path: /health
+  liveness:
+    path: /health
+service:
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  host: notifications.lab.local
+rollout:
+  enabled: true
+  workloadRef:
+    enabled: false
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: {duration: 60s}
+        - setWeight: 50
+        - pause: {duration: 60s}
+        - setWeight: 100
+  analysis:
+    templates:
+      - templateName: success-rate
+        clusterScope: true
+      - templateName: latency-p99
+        clusterScope: true
+    args:
+      - name: namespace
+        value: notifications

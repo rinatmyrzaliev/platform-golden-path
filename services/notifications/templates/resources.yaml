@@ -1,0 +1,9 @@
+{{- include "platform.rollout" . }}
+---
+{{ include "platform.service" . }}
+---
+{{ include "platform.canary-service" . }}
+---
+{{ include "platform.ingress" . }}
+---
+{{ include "platform.pdb" . }}
