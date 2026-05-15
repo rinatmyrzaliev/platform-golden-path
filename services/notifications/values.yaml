@@ -4,7 +4,7 @@ slo_tier: "2"
 on_call_channel: platform-eng-oncall
 image:
   repository: 517121893325.dkr.ecr.us-east-1.amazonaws.com/notifications-service
-  tag: "39704f3d5c5290d1e6b717e553c15201787392a3"
+  tag: "048803a1236ae21a58a3f5c3bc20c479289a4e55"
 port: 8000
 replicaCount: 2
 resources:
