@@ -4,7 +4,18 @@ slo_tier: "2"
 on_call_channel: platform-eng-oncall
 image:
   repository: 517121893325.dkr.ecr.us-east-1.amazonaws.com/notifications-service
-  tag: "048803a1236ae21a58a3f5c3bc20c479289a4e55"
+  tag: "otel-048803a"
+env:
+  - name: OTEL_SERVICE_NAME
+    value: notifications-service
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: http://otel-collector-opentelemetry-collector.logging:4317
+  - name: OTEL_TRACES_EXPORTER
+    value: otlp
+  - name: OTEL_METRICS_EXPORTER
+    value: none
+  - name: OTEL_LOGS_EXPORTER
+    value: none
 port: 8000
 replicaCount: 2
 resources:
